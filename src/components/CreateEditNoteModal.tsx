@@ -1,7 +1,9 @@
 import type { ModalData } from "@/types/ModalData";
+import { api } from "@/utils/api";
 import type { SetStateAction } from "react"
 import type { Resolver } from "react-hook-form";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form"
+import type { SubmitHandler } from "react-hook-form";
 
 type Note = {
   content: string,
@@ -26,15 +28,31 @@ function CreateEditNoteModal(props: {
     },
     resolver: resolver,
   });
-  const CreateNote: SubmitHandler<Note> = (data: Note) => {
-    const newNote: Note = {
-      title: data.title,
-      content: data.content,
-    };
-    console.log(newNote);
+  const onSubmit2 = handleSubmit((data: Note) => {
+    if (props.modalData.mode === "create") {
+      const { mutate } = api.note.create.useMutation({
+        onError() {
+          console.log("Error")
+        }, onSuccess() {
+          console.log("Success")
+        },
+      })
+      mutate(data)
+    }
     props.setModalData({ mode: "create", show: false });
     reset();
-  }
+  })
+  const onSubmit = () => handleSubmit((data: Note, e) => {
+    e?.preventDefault()
+    if (props.modalData.mode === "create") {
+      const {mutate } = api.note.create.useMutation({
+            onError() {
+              console.log("Error")
+            },
+          })
+      mutate(data)
+    }
+  })
   function onCancel() {
     console.log("cancel");
   }
@@ -47,7 +65,7 @@ function CreateEditNoteModal(props: {
           {!props && "New Note"}
         </span>
         <form
-          onSubmit={handleSubmit(CreateNote)}
+          onSubmit={onSubmit}
           className="flex flex-col p-2 md:p-3 gap-y-4 md:gap-1"
         >
           <div className="flex flex-col md:p-1 gap-1">
