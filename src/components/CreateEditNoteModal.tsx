@@ -1,23 +1,23 @@
+import type { ModalData } from "@/types/ModalData";
 import type { SetStateAction } from "react"
-import { useEffect } from "react";
 import type { Resolver } from "react-hook-form";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 type Note = {
   content: string,
   title: string
 }
 
-function CreateNoteModal(props: {
-  showModal: boolean;
-  setModalData: React.Dispatch<SetStateAction<boolean>>;
+function CreateEditNoteModal(props: {
+  modalData: ModalData,
+  setModalData: React.Dispatch<SetStateAction<ModalData>>;
 }) {
   const {
     handleSubmit,
     formState: { errors },
     register,
     reset,
-    setValue
+    // setValue
   } = useForm<Note>({
     defaultValues: {
     },
@@ -26,27 +26,25 @@ function CreateNoteModal(props: {
     },
     resolver: resolver,
   });
-  const CreateNote = (data: Note) => {
+  const CreateNote: SubmitHandler<Note> = (data: Note) => {
     const newNote: Note = {
       title: data.title,
       content: data.content,
     };
-    console.log(newNote)
-    }
-    props.setModalData(false);
+    console.log(newNote);
+    props.setModalData({ mode: "create", show: false });
     reset();
-  };
-  const onCancel = () => {
-  };
+  }
+  function onCancel() {
+    console.log("cancel");
+  }
   return (
     <div
-      className={`fixed top-32 h-fit w-screen md:h-fit left-0 md:left-1/4 md:mx-auto p-0.5 pt-5 md:p-4 md:pt-5 border sm:w-screen md:w-1/2 shadow-md md:shadow-lg rounded-md bg-white dark:bg-slate-900 dark:border-slate-800 ${props.showModal ? "" : "hidden"
-        } ${props.editNote ? "" : "hideen"}`}
-    >
+      className={`fixed top-32 h-fit w-screen md:h-fit left-0 md:left-1/4 md:mx-auto p-0.5 pt-5 md:p-4 md:pt-5 border sm:w-screen md:w-1/2 shadow-md md:shadow-lg rounded-md bg-white dark:bg-slate-900 dark:border-slate-800 ${props.modalData.show ? "" : "hidden"}`}>
       <div className="flex flex-col">
         <span className="text-center text-xl text-zinc-700 font-medium dark:text-zinc-400">
-          {props.editNote && "Edit Note"}
-          {!props.editNote && "New Note"}
+          {props && "Edit Note"}
+          {!props && "New Note"}
         </span>
         <form
           onSubmit={handleSubmit(CreateNote)}
@@ -116,5 +114,5 @@ const resolver: Resolver<Note> = (values) => {
   };
 };
 
-export default CreateNoteModal;
+export default CreateEditNoteModal;
 

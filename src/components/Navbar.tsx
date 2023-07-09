@@ -1,7 +1,10 @@
+import type { ModalData } from "@/types/ModalData"
 import { useUser } from "@clerk/nextjs"
 import Image from "next/image"
+import type { SetStateAction } from "react"
+import React from "react"
 
-const NavBar = () => {
+const NavBar = (props: {setModalData: React.Dispatch<SetStateAction<ModalData>>}) => {
   const { user, isLoaded } = useUser()
   if (!isLoaded) return <div>Loading...</div>
   if (!user) return <div>Something Went Wrong</div>
@@ -16,6 +19,7 @@ const NavBar = () => {
         <button
           className="p-4 text-lg font-medium bg-sky-950 text-zinc-300 hover:bg-sky-900"
           id="model-open-btn"
+          onClick={() => {props.setModalData({mode: "edit", show: true})}}
         >
           Add Note
         </button>
