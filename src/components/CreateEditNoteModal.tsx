@@ -3,7 +3,6 @@ import { api } from "@/utils/api";
 import type { SetStateAction } from "react"
 import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form"
-import type { SubmitHandler } from "react-hook-form";
 
 type Note = {
   content: string,
@@ -28,29 +27,16 @@ function CreateEditNoteModal(props: {
     },
     resolver: resolver,
   });
-  const onSubmit2 = handleSubmit((data: Note) => {
+  const onSubmit = () => handleSubmit((data: Note) => {
+    console.log(data)
     if (props.modalData.mode === "create") {
       const { mutate } = api.note.create.useMutation({
         onError() {
           console.log("Error")
-        }, onSuccess() {
-          console.log("Success")
         },
       })
       mutate(data)
-    }
-    props.setModalData({ mode: "create", show: false });
-    reset();
-  })
-  const onSubmit = () => handleSubmit((data: Note, e) => {
-    e?.preventDefault()
-    if (props.modalData.mode === "create") {
-      const {mutate } = api.note.create.useMutation({
-            onError() {
-              console.log("Error")
-            },
-          })
-      mutate(data)
+      reset()
     }
   })
   function onCancel() {
@@ -61,8 +47,8 @@ function CreateEditNoteModal(props: {
       className={`fixed top-32 h-fit w-screen md:h-fit left-0 md:left-1/4 md:mx-auto p-0.5 pt-5 md:p-4 md:pt-5 border sm:w-screen md:w-1/2 shadow-md md:shadow-lg rounded-md bg-white dark:bg-slate-900 dark:border-slate-800 ${props.modalData.show ? "" : "hidden"}`}>
       <div className="flex flex-col">
         <span className="text-center text-xl text-zinc-700 font-medium dark:text-zinc-400">
-          {props && "Edit Note"}
-          {!props && "New Note"}
+          {props.modalData.mode === "edit" && "Edit Note"}
+          {props.modalData.mode === "create" && "New Note"}
         </span>
         <form
           onSubmit={onSubmit}
