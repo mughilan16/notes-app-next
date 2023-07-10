@@ -1,16 +1,24 @@
 import type { ModalData } from "@/types/ModalData";
 import { api } from "@/utils/api";
-import type { SetStateAction } from "react";
+import { useEffect, type SetStateAction } from "react";
 import type { Resolver } from "react-hook-form";
 import type { Note } from "@/types/Note";
 import { useForm } from "react-hook-form";
+import { DetailNote } from "@/types/DetailNote";
 
 function CreateEditNoteModal(props: {
   modalData: ModalData;
   setModalData: React.Dispatch<SetStateAction<ModalData>>;
+  selectedNote: DetailNote | undefined;
+  setSelectedNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
 }) {
   const ctx = api.useContext();
   const { mutate } = api.note.create.useMutation({
+    onSuccess: () => {
+      void ctx.note.getAll.invalidate();
+    },
+  });
+  const { mutate: edit } = api.note.edit.useMutation({
     onSuccess: () => {
       void ctx.note.getAll.invalidate();
     },
@@ -20,7 +28,7 @@ function CreateEditNoteModal(props: {
     formState: { errors },
     register,
     reset,
-    // setValue
+    setValue,
   } = useForm<Note>({
     defaultValues: {},
     resetOptions: {
@@ -28,6 +36,12 @@ function CreateEditNoteModal(props: {
     },
     resolver: resolver,
   });
+  useEffect(() => {
+    if (props.selectedNote !== undefined) {
+      setValue("title", props.selectedNote.title);
+      setValue("content", props.selectedNote.content);
+    }
+  }, [props.selectedNote]);
   function onCancel() {
     props.setModalData({
       mode: "create",
@@ -37,6 +51,17 @@ function CreateEditNoteModal(props: {
   }
   function createNewNote(data: Note) {
     mutate(data);
+  }
+  function editNote(data: Note) {
+    if (props.selectedNote === undefined) {
+      return;
+    }
+    const input = {
+      title: data.title,
+      content: data.content,
+      id: props.selectedNote?.id,
+    };
+    edit(input);
   }
   return (
     <div
@@ -54,6 +79,7 @@ function CreateEditNoteModal(props: {
           onSubmit={handleSubmit((data, e) => {
             e?.preventDefault();
             if (props.modalData.mode === "create") createNewNote(data);
+            else editNote(data);
             props.setModalData({ mode: props.modalData.mode, show: false });
             reset();
           })}
