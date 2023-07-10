@@ -27,7 +27,7 @@ export default function Home() {
           <NavBar setModalData={setModalData} />
           <div className="mt-14 grid w-screen gap-4 p-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {data?.map((note) => (
-              <NoteView note={note} />
+              <NoteView note={note} key={note.authorId} />
             ))}
           </div>
           <div

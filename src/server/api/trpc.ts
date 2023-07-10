@@ -21,8 +21,6 @@ import { getAuth } from "@clerk/nextjs/server";
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
-type CreateContextOptions = Record<string, never>;
-
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
  * it from here.
@@ -41,12 +39,12 @@ type CreateContextOptions = Record<string, never>;
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = (opts: CreateNextContextOptions) => {
-  const {req} = opts;
+  const { req } = opts;
   const sesh = getAuth(req);
   const userId = sesh.userId;
   return {
     prisma,
-    userId
+    userId,
   };
 };
 
@@ -95,16 +93,15 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-const enforceUserIsAuthed = t.middleware(async ({ctx, next}) => {
+const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   if (!ctx.userId) {
-    throw new TRPCError({code: "UNAUTHORIZED"})
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
-      userId: ctx.userId
-    }
+      userId: ctx.userId,
+    },
   });
-})
+});
 
-
-export const privateProcedure = t.procedure.use(enforceUserIsAuthed)
+export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
