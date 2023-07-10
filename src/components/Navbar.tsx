@@ -19,7 +19,7 @@ const NavBar = (props: {setModalData: React.Dispatch<SetStateAction<ModalData>>}
         <button
           className="p-4 text-lg font-medium bg-sky-950 text-zinc-300 hover:bg-sky-900"
           id="model-open-btn"
-          onClick={() => {props.setModalData({mode: "edit", show: true})}}
+          onClick={() => {props.setModalData({mode: "create", show: true})}}
         >
           Add Note
         </button>
