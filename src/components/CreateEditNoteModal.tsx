@@ -9,7 +9,12 @@ function CreateEditNoteModal(props: {
   modalData: ModalData;
   setModalData: React.Dispatch<SetStateAction<ModalData>>;
 }) {
-  const { mutate } = api.note.create.useMutation();
+  const ctx = api.useContext();
+  const { mutate } = api.note.create.useMutation({
+    onSuccess: () => {
+      void ctx.note.getAll.invalidate();
+    },
+  });
   const {
     handleSubmit,
     formState: { errors },
@@ -65,9 +70,9 @@ function CreateEditNoteModal(props: {
                 </span>
               )}
             </div>
-            <div className="rounded-sm border bg-transparent dark:border-slate-800 md:border-2">
+            <div className="rounded-md bg-slate-800 bg-opacity-30">
               <input
-                className="w-full bg-transparent p-1 py-2 text-lg font-medium text-zinc-700 focus:outline-none dark:text-zinc-400 dark:placeholder:text-slate-800 md:p-2"
+                className="w-full bg-transparent p-1 py-2 text-lg font-medium text-slate-400 placeholder:text-slate-700 focus:outline-none md:p-2"
                 {...register("title")}
                 placeholder="Note title"
               />
@@ -77,11 +82,11 @@ function CreateEditNoteModal(props: {
             <span className="text-lg font-medium text-zinc-700 dark:text-zinc-400">
               Content
             </span>
-            <div className="h-36 rounded-sm border dark:border-slate-800 md:border-2">
+            <div className="h-36 rounded-md bg-slate-800 bg-opacity-30">
               <textarea
                 {...register("content")}
                 placeholder="This is my note."
-                className="font-medioum h-96 w-full bg-transparent p-1 py-2 text-lg text-zinc-700 focus:outline-none dark:text-zinc-400 dark:placeholder:text-slate-800 md:h-full md:p-2"
+                className="font-medioum h-96 w-full bg-transparent p-1 py-2 text-lg  text-slate-400 placeholder:text-slate-700 focus:outline-none md:h-full md:p-2"
               />
             </div>
           </div>
