@@ -12,6 +12,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import type { DetailNote } from "@/types/DetailNote";
 import { LoadingPage } from "@/components/loading";
 import DeleteNoteModal from "@/components/DeleteNoteModal";
+import ViewNoteModal from "@/components/ViewNoteModal";
 
 dayjs.extend(relativeTime);
 
@@ -22,6 +23,7 @@ export default function Home() {
   });
   const [deleteNote, setDeleteNote] = useState<DetailNote>();
   const [selectedNote, setSelectedNote] = useState<DetailNote>();
+  const [viewNote, setViewNote] = useState<DetailNote>();
   const { data, isLoading } = api.note.getAll.useQuery();
   return (
     <>
@@ -41,6 +43,7 @@ export default function Home() {
                   setSelectedNote={setSelectedNote}
                   setModalData={setModalData}
                   setDeleteNote={setDeleteNote}
+                  setPreviewNote={setViewNote}
                 />
               ))
             ) : (
@@ -53,11 +56,12 @@ export default function Home() {
           </div>
           <div
             className={`fixed inset-0 h-full w-full overflow-y-auto  bg-gray-950 bg-opacity-50 ${
-              modalData.show || deleteNote ? "" : "hidden"
+              modalData.show || deleteNote || viewNote ? "" : "hidden"
             }`}
             onClick={() => {
               setModalData({ mode: "create", show: false });
               setDeleteNote(undefined);
+              setViewNote(undefined)
             }}
           ></div>
           <CreateEditNoteModal
@@ -66,6 +70,7 @@ export default function Home() {
             selectedNote={selectedNote}
             setSelectedNote={setSelectedNote}
           />
+          <ViewNoteModal setNote={setViewNote} note={viewNote}/>
           {deleteNote && (
             <DeleteNoteModal setDeleteNote={setDeleteNote} note={deleteNote} />
           )}
@@ -79,6 +84,7 @@ function NoteView(props: {
   note: DetailNote;
   setSelectedNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
   setDeleteNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
+  setPreviewNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
   setModalData: React.Dispatch<SetStateAction<ModalData>>;
 }) {
   const setEdit = () => {
@@ -88,11 +94,14 @@ function NoteView(props: {
   const setDelete = () => {
     props.setDeleteNote(props.note);
   };
+  const setPreview = () => {
+    props.setPreviewNote(props.note)
+  }
   return (
-    <div className="flex h-40 min-h-full min-w-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-sm">
+    <div className="flex h-40 min-h-full min-w-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-md">
       <div className="h-5/6">
         <div className="flex flex-row justify-between align-middle">
-          <span className="grow cursor-pointer text-lg font-medium text-zinc-300">
+          <span className="grow cursor-pointer text-lg font-medium text-zinc-300" onClick={setPreview}>
             {props.note.title}
           </span>
           <div className="flex flex-row gap-2 align-middle">
@@ -112,7 +121,7 @@ function NoteView(props: {
             </button>
           </div>
         </div>
-        <span className="font-regular grow cursor-pointer overflow-hidden text-ellipsis text-lg text-zinc-400">
+        <span className="font-regular grow cursor-pointer overflow-hidden text-ellipsis text-lg text-zinc-400" onClick={setPreview}>
           {props.note.content}
         </span>
       </div>

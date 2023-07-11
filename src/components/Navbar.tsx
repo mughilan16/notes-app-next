@@ -28,7 +28,7 @@ const NavBar = (props: {
           Add Note
         </button>
         <button
-          className="bg-sky-950 p-4 text-lg font-medium text-zinc-300 hover:bg-sky-900 md:hidden"
+          className="bg-sky-950 uppercase p-4 text-lg font-medium text-zinc-300 hover:bg-sky-900 md:hidden"
           id="model-open-btn"
           onClick={() => {
             props.setModalData({ mode: "create", show: true });

@@ -65,7 +65,7 @@ function CreateEditNoteModal(props: {
   }
   return (
     <div
-      className={`fixed left-5 w-11/12 md:w-9/12 md:left-32 lg:left-1/5 xl:left-1/4 top-32 h-fit rounded-md border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:mx-auto md:h-fit lg:w-4/6 xl:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${props.modalData.show ? "" : "hidden"
+      className={`fixed left-5 w-11/12 md:w-9/12 md:left-32 lg:left-1/5 xl:left-1/4 top-32 h-fit rounded-sm border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:mx-auto md:h-fit lg:w-4/6 xl:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${props.modalData.show ? "" : "hidden"
         }`}
     >
       <div className="flex flex-col">
@@ -81,7 +81,7 @@ function CreateEditNoteModal(props: {
             props.setModalData({ mode: props.modalData.mode, show: false });
             reset();
           })}
-          className="flex flex-col gap-y-4 p-2 md:gap-1 md:p-3"
+          className="flex flex-col gap-y-4 p-3 md:gap-1 md:p-3"
         >
           <div className="flex flex-col gap-1 md:p-1">
             <div className="flex flex-row justify-between align-middle">
@@ -94,7 +94,7 @@ function CreateEditNoteModal(props: {
                 </span>
               )}
             </div>
-            <div className="rounded-md bg-slate-800 bg-opacity-30">
+            <div className="rounded-sm bg-slate-800 bg-opacity-30 p-1">
               <input
                 className="w-full bg-transparent p-1 py-2 text-lg font-medium text-slate-400 placeholder:text-slate-700 focus:outline-none md:p-2"
                 {...register("title")}
@@ -106,7 +106,7 @@ function CreateEditNoteModal(props: {
             <span className="text-lg font-medium text-zinc-700 dark:text-zinc-400">
               Content
             </span>
-            <div className="h-36 rounded-md bg-slate-800 bg-opacity-30">
+            <div className="h-36 rounded-sm bg-slate-800 bg-opacity-30 p-1">
               <textarea
                 {...register("content")}
                 placeholder="This is my note."
