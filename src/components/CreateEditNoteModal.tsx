@@ -65,7 +65,7 @@ function CreateEditNoteModal(props: {
   }
   return (
     <div
-      className={`fixed md:left-32 lg:left-1/5 xl:left-1/4 top-32 h-fit w-full rounded-md border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:mx-auto md:h-fit md:w-3/4 lg:w-4/6 xl:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${props.modalData.show ? "" : "hidden"
+      className={`fixed left-5 w-11/12 md:w-9/12 md:left-32 lg:left-1/5 xl:left-1/4 top-32 h-fit rounded-md border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:mx-auto md:h-fit lg:w-4/6 xl:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${props.modalData.show ? "" : "hidden"
         }`}
     >
       <div className="flex flex-col">
