@@ -4,7 +4,7 @@ import { useEffect, type SetStateAction } from "react";
 import type { Resolver } from "react-hook-form";
 import type { Note } from "@/types/Note";
 import { useForm } from "react-hook-form";
-import { DetailNote } from "@/types/DetailNote";
+import type { DetailNote } from "@/types/DetailNote";
 
 function CreateEditNoteModal(props: {
   modalData: ModalData;
@@ -41,7 +41,7 @@ function CreateEditNoteModal(props: {
       setValue("title", props.selectedNote.title);
       setValue("content", props.selectedNote.content);
     }
-  }, [props.selectedNote]);
+  }, [props.selectedNote, setValue]);
   function onCancel() {
     props.setModalData({
       mode: "create",
@@ -65,9 +65,8 @@ function CreateEditNoteModal(props: {
   }
   return (
     <div
-      className={`fixed left-0 top-32 h-fit w-screen rounded-md border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:left-1/4 md:mx-auto md:h-fit md:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${
-        props.modalData.show ? "" : "hidden"
-      }`}
+      className={`fixed left-0 top-32 h-fit w-11/12 rounded-md border bg-white p-0.5 pt-5 shadow-md dark:border-slate-800 dark:bg-slate-900 sm:w-screen md:left-1/6 md:mx-auto md:h-fit md:w-3/4 lg:w-1/2 md:p-4 md:pt-5 md:shadow-lg ${props.modalData.show ? "" : "hidden"
+        }`}
     >
       <div className="flex flex-col">
         <span className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400">
@@ -141,11 +140,11 @@ const resolver: Resolver<Note> = (values) => {
     values: values.title ? values : {},
     errors: !values.title
       ? {
-          title: {
-            type: "required",
-            message: "*required",
-          },
-        }
+        title: {
+          type: "required",
+          message: "*required",
+        },
+      }
       : {},
   };
 };

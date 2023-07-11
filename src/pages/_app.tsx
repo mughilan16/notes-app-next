@@ -11,7 +11,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <title>Quick Note</title>
         <link
           rel="icon"
-          href="../../public/assignment.png"
+          href="assignment.png"
           type="image/x-icon"
           sizes="32x32"
         />

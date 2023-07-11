@@ -1,6 +1,7 @@
 import Head from "next/head";
 import NavBar from "@/components/Navbar";
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
+import type { SetStateAction } from "react";
 import type { ModalData } from "@/types/ModalData";
 import CreateEditNoteModal from "@/components/CreateEditNoteModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,7 +9,8 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { api } from "@/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { DetailNote } from "@/types/DetailNote";
+import type { DetailNote } from "@/types/DetailNote";
+import { LoadingPage } from "@/components/loading";
 
 dayjs.extend(relativeTime);
 
@@ -17,8 +19,9 @@ export default function Home() {
     mode: "create",
     show: false,
   });
+  const [deleteModal, setDeleteModal] = useState<DetailNote>();
   const [selectedNote, setSelectedNote] = useState<DetailNote>();
-  const { data } = api.note.getAll.useQuery();
+  const { data, isLoading } = api.note.getAll.useQuery();
   console.log(data);
   return (
     <>
@@ -28,15 +31,18 @@ export default function Home() {
       <main className="min-w-screen flex min-h-screen flex-col items-center justify-center">
         <div className="flex h-full min-h-screen flex-col bg-slate-900">
           <NavBar setModalData={setModalData} />
-          <div className="mt-14 grid w-screen gap-4 p-4 pt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            {data?.map((note) => (
-              <NoteView
-                note={note}
-                key={note.id}
-                setSelectedNote={setSelectedNote}
-                setModalData={setModalData}
-              />
-            ))}
+          <div className="mt-14 grid w-screen gap-4 p-4 pt-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            {isLoading && <LoadingPage />}
+            {data &&
+              data.map((note) => (
+                <NoteView
+                  note={note}
+                  key={note.id}
+                  setSelectedNote={setSelectedNote}
+                  setModalData={setModalData}
+                  setDeleteNote={setDeleteModal}
+                />
+              ))}
           </div>
           <div
             className={`fixed inset-0 h-full w-full overflow-y-auto  bg-gray-950 bg-opacity-50 ${
@@ -61,6 +67,7 @@ export default function Home() {
 function NoteView(props: {
   note: DetailNote;
   setSelectedNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
+  setDeleteNote: React.Dispatch<SetStateAction<DetailNote | undefined>>;
   setModalData: React.Dispatch<SetStateAction<ModalData>>;
 }) {
   const setEdit = () => {
@@ -68,7 +75,7 @@ function NoteView(props: {
     props.setModalData({ mode: "edit", show: true });
   };
   return (
-    <div className="flex h-40 min-h-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-sm">
+    <div className="flex h-40 min-h-full min-w-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-sm">
       <div className="h-5/6">
         <div className="flex flex-row justify-between align-middle">
           <span className="grow cursor-pointer text-lg font-medium text-zinc-300">
