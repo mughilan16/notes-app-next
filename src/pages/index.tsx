@@ -33,7 +33,7 @@ export default function Home() {
           <NavBar setModalData={setModalData} />
           <div className="mt-14 grid w-screen gap-4 p-4 pt-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {isLoading && <LoadingPage />}
-            { data?.length !== 0 ? (
+            {data?.length !== 0 ? (
               data?.map((note) => (
                 <NoteView
                   note={note}
@@ -44,9 +44,9 @@ export default function Home() {
                 />
               ))
             ) : (
-              <div className="absolute left-0 text-center top-1/3 w-screen text-lg text-slate-500">
+              <div className="absolute left-0 top-1/3 w-screen text-center text-xl text-slate-500 lg:text-2xl">
                 You have no note.
-                <br/>
+                <br />
                 Add New Note
               </div>
             )}
