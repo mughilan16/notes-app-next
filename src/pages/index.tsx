@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import type { DetailNote } from "@/types/DetailNote";
 import { LoadingPage } from "@/components/loading";
+import DeleteNoteModal from "@/components/DeleteNoteModal";
 
 dayjs.extend(relativeTime);
 
@@ -19,7 +20,7 @@ export default function Home() {
     mode: "create",
     show: false,
   });
-  const [deleteModal, setDeleteModal] = useState<DetailNote>();
+  const [deleteNote, setDeleteNote] = useState<DetailNote>();
   const [selectedNote, setSelectedNote] = useState<DetailNote>();
   const { data, isLoading } = api.note.getAll.useQuery();
   console.log(data);
@@ -40,16 +41,17 @@ export default function Home() {
                   key={note.id}
                   setSelectedNote={setSelectedNote}
                   setModalData={setModalData}
-                  setDeleteNote={setDeleteModal}
+                  setDeleteNote={setDeleteNote}
                 />
               ))}
           </div>
           <div
             className={`fixed inset-0 h-full w-full overflow-y-auto  bg-gray-950 bg-opacity-50 ${
-              modalData.show ? "" : "hidden"
+              modalData.show || deleteNote ? "" : "hidden"
             }`}
             onClick={() => {
               setModalData({ mode: "create", show: false });
+              setDeleteNote(undefined)
             }}
           ></div>
           <CreateEditNoteModal
@@ -58,6 +60,7 @@ export default function Home() {
             selectedNote={selectedNote}
             setSelectedNote={setSelectedNote}
           />
+          {deleteNote && <DeleteNoteModal setDeleteNote={setDeleteNote} note={deleteNote} />}
         </div>
       </main>
     </>
@@ -74,6 +77,9 @@ function NoteView(props: {
     props.setSelectedNote(props.note);
     props.setModalData({ mode: "edit", show: true });
   };
+  const setDelete = () => {
+    props.setDeleteNote(props.note)
+  }
   return (
     <div className="flex h-40 min-h-full min-w-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-sm">
       <div className="h-5/6">
@@ -93,6 +99,7 @@ function NoteView(props: {
               <FontAwesomeIcon
                 icon={faTrash}
                 className="h-4 text-gray-300 hover:text-red-700"
+                onClick={setDelete}
               />
             </button>
           </div>

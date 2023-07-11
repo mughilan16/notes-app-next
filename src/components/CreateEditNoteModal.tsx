@@ -74,7 +74,6 @@ function CreateEditNoteModal(props: {
           {props.modalData.mode === "create" && "New Note"}
         </span>
         <form
-          //onSubmit={onSubmit}
           onSubmit={handleSubmit((data, e) => {
             e?.preventDefault();
             if (props.modalData.mode === "create") createNewNote(data);

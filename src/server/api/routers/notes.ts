@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, privateProcedure } from "../trpc";
-import { contextProps } from "@trpc/react-query/shared";
 
 export const noteRouter = createTRPCRouter({
   create: privateProcedure

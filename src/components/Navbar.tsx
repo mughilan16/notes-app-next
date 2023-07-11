@@ -13,7 +13,7 @@ const NavBar = (props: {
     <div className="fixed left-0 right-0 top-0 flex flex-row items-center justify-between border-b border-slate-800 bg-slate-900 pl-2 align-middle text-zinc-300 md:pl-4">
       <div className="flex flex-row items-center gap-2 p-2  align-middle">
         <Image src="/assignment.png" alt="logo" width={44} height={44}></Image>
-        <span className="hidden md:flex text-xl font-medium text-zinc-700 dark:text-zinc-300 md:text-2xl lg:text-3xl">
+        <span className="hidden text-xl font-medium text-zinc-700 dark:text-zinc-300 md:flex md:text-2xl lg:text-3xl">
           Quick Notes
         </span>
       </div>
@@ -36,14 +36,20 @@ const NavBar = (props: {
         >
           Add
         </button>
-        {!isLoaded && <LoadingSpinner size={64} />}
-        {user && <Image
-          src={user.profileImageUrl}
-          alt="user profile picture"
-          width={56}
-          height={56}
-          className="h-16 w-16"
-        />}
+        {!isLoaded && (
+          <div className="h-16 w-16 flex justify-center align-middle">
+            <LoadingSpinner size={56} />
+          </div>
+        )}
+        {user && (
+          <Image
+            src={user.profileImageUrl}
+            alt="user profile picture"
+            width={56}
+            height={56}
+            className="h-16 w-16"
+          />
+        )}
       </div>
     </div>
   );
