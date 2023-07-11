@@ -23,7 +23,6 @@ export default function Home() {
   const [deleteNote, setDeleteNote] = useState<DetailNote>();
   const [selectedNote, setSelectedNote] = useState<DetailNote>();
   const { data, isLoading } = api.note.getAll.useQuery();
-  console.log(data);
   return (
     <>
       <Head>
@@ -34,8 +33,8 @@ export default function Home() {
           <NavBar setModalData={setModalData} />
           <div className="mt-14 grid w-screen gap-4 p-4 pt-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {isLoading && <LoadingPage />}
-            {data &&
-              data.map((note) => (
+            { data?.length !== 0 ? (
+              data?.map((note) => (
                 <NoteView
                   note={note}
                   key={note.id}
@@ -43,7 +42,14 @@ export default function Home() {
                   setModalData={setModalData}
                   setDeleteNote={setDeleteNote}
                 />
-              ))}
+              ))
+            ) : (
+              <div className="absolute left-0 text-center top-1/3 w-screen text-lg text-slate-500">
+                You have no note.
+                <br/>
+                Add New Note
+              </div>
+            )}
           </div>
           <div
             className={`fixed inset-0 h-full w-full overflow-y-auto  bg-gray-950 bg-opacity-50 ${
@@ -51,7 +57,7 @@ export default function Home() {
             }`}
             onClick={() => {
               setModalData({ mode: "create", show: false });
-              setDeleteNote(undefined)
+              setDeleteNote(undefined);
             }}
           ></div>
           <CreateEditNoteModal
@@ -60,7 +66,9 @@ export default function Home() {
             selectedNote={selectedNote}
             setSelectedNote={setSelectedNote}
           />
-          {deleteNote && <DeleteNoteModal setDeleteNote={setDeleteNote} note={deleteNote} />}
+          {deleteNote && (
+            <DeleteNoteModal setDeleteNote={setDeleteNote} note={deleteNote} />
+          )}
         </div>
       </main>
     </>
@@ -78,8 +86,8 @@ function NoteView(props: {
     props.setModalData({ mode: "edit", show: true });
   };
   const setDelete = () => {
-    props.setDeleteNote(props.note)
-  }
+    props.setDeleteNote(props.note);
+  };
   return (
     <div className="flex h-40 min-h-full min-w-full flex-col gap-1 rounded-sm bg-slate-800 p-3 shadow-sm">
       <div className="h-5/6">
